@@ -433,11 +433,12 @@
       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
     import {
-      getFirestore,
-      collection,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+  getFirestore,
+  collection,
+  onSnapshot,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     /* ==========================================
        FIREBASE CONFIG KAU
@@ -815,20 +816,16 @@
 
         if (!outOfStock) {
 
-          button.addEventListener(
-            "click",
-            () => {
+  button.addEventListener(
+    "click",
+    () => {
 
-              orderWhatsApp(
-                name,
-                price,
-                stock
-              );
+      orderWhatsApp(product);
 
-            }
-          );
+    }
+  );
 
-        }
+}
 
 
         productsContainer.appendChild(
@@ -844,11 +841,148 @@
        WHATSAPP ORDER
        ========================================== */
 
-    function orderWhatsApp(
-      name,
-      price,
-      stock
-    ) {
+    async function orderWhatsApp(product) {
+
+  const name =
+    product.name || "Unknown Fruit";
+
+  const price =
+    Number(product.price || 0);
+
+  const stock =
+    Number(product.stock || 0);
+
+  const productId =
+    product.id || "";
+
+
+  if (!productId) {
+
+    alert(
+      "Product ini belum mempunyai ID Firebase."
+    );
+
+    return;
+
+  }
+
+
+  if (stock <= 0) {
+
+    alert(
+      "Maaf, stock sudah habis."
+    );
+
+    return;
+
+  }
+
+
+  const customerName =
+    prompt("Masukkan nama anda:");
+
+  if (!customerName) {
+    return;
+  }
+
+
+  const customerPhone =
+    prompt("Masukkan nombor WhatsApp anda:");
+
+  if (!customerPhone) {
+    return;
+  }
+
+
+  try {
+
+    /* SIMPAN ORDER */
+
+    await addDoc(
+      collection(db, "orders"),
+      {
+
+        productId:
+          productId,
+
+        productName:
+          name,
+
+        price:
+          price,
+
+        customerName:
+          customerName.trim(),
+
+        phone:
+          customerPhone.trim(),
+
+        status:
+          "Pending",
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    /* BUKA WHATSAPP */
+
+    const text =
+      `Hi ZERAXXSTORE 👋\n\n` +
+
+      `Saya nak beli:\n` +
+
+      `🍎 ${name}\n` +
+
+      `💰 Harga: RM ${price.toFixed(2)}\n\n` +
+
+      `👤 Nama: ${customerName}\n` +
+
+      `📱 WhatsApp: ${customerPhone}\n\n` +
+
+      `Order saya telah dibuat melalui website.`;
+
+
+    const phone =
+      "60193019528";
+
+
+    const url =
+      "https://wa.me/" +
+      phone +
+      "?text=" +
+      encodeURIComponent(text);
+
+
+    window.open(
+      url,
+      "_blank"
+    );
+
+
+    alert(
+      "Order berjaya dihantar! Sila teruskan di WhatsApp."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Order Error:",
+      error
+    );
+
+
+    alert(
+      "Order gagal dibuat: " +
+      error.message
+    );
+
+  }
+
+}
 
       const text =
         `Hi ZERAXXSTORE 👋\n\n` +
