@@ -284,4 +284,1000 @@
       box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     }
 
-    .whatsapp:hover
+    .whatsapp:hover {
+      transform: scale(1.08);
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+
+      header {
+        flex-direction: column;
+        padding: 13px;
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .hero {
+        margin-top: 12px;
+      }
+
+      .poster img {
+        max-height: 260px;
+      }
+
+      .store-title {
+        font-size: 24px;
+      }
+
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .product-image {
+        height: 140px;
+      }
+
+      .product-info {
+        padding: 10px;
+      }
+
+      .product-name {
+        font-size: 15px;
+      }
+
+      .price {
+        font-size: 17px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="logo">
+      ZERAXX<span>STORE</span>
+    </div>
+
+    <div class="search">
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search fruit..."
+      >
+
+      <a
+        href="admin.html"
+        style="
+          display:block;
+          margin-top:8px;
+          text-align:center;
+          color:#ff2020;
+          font-size:12px;
+          font-weight:bold;
+          text-decoration:none;
+        "
+      >
+        🔐 ADMIN
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- POSTER -->
+
+  <section class="hero">
+
+    <div class="poster">
+
+      <img
+        src="poster.png"
+        alt="ZERAXXSTORE"
+        onerror="this.parentElement.style.display='none'"
+      >
+
+    </div>
+
+  </section>
+
+
+  <!-- STORE INFORMATION -->
+
+  <section class="store-info">
+
+    <h1 class="store-title">
+      ZERAXX<span>STORE</span>
+    </h1>
+
+    <p class="description">
+      Blox Fruits item store. Pilih fruit yang anda inginkan,
+      kemudian tekan BUY NOW untuk order melalui WhatsApp.
+    </p>
+
+  </section>
+
+
+  <!-- PRODUCTS -->
+
+  <section class="products-section">
+
+    <h2 class="section-title">
+      Available <span>Fruits</span>
+    </h2>
+
+    <div
+      id="products"
+      class="products"
+    >
+
+      <div class="loading">
+        Loading products...
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    © 2026 <strong>ZERAXXSTORE</strong> · Blox Fruits Items
+
+  </footer>
+
+
+  <!-- WHATSAPP BUTTON -->
+
+  <a
+    class="whatsapp"
+    href="https://wa.me/60193019528"
+    target="_blank"
+    aria-label="WhatsApp"
+  >
+    ☎
+  </a>
+
+
+
+  <!-- FIREBASE -->
+
+  <script type="module">
+
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+    import {
+      getFirestore,
+      collection,
+      onSnapshot,
+      addDoc,
+      serverTimestamp
+    }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+    /* ==========================================
+       FIREBASE CONFIG
+       ========================================== */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
+
+      authDomain:
+        "zerraxx-store.firebaseapp.com",
+
+      projectId:
+        "zerraxx-store",
+
+      storageBucket:
+        "zerraxx-store.firebasestorage.app",
+
+      messagingSenderId:
+        "946691118004",
+
+      appId:
+        "1:946691118004:web:cf189cc85f11380c3fd8e1",
+
+      measurementId:
+        "G-006D7F68L4"
+
+    };
+
+
+
+    /* ==========================================
+       INITIALIZE FIREBASE
+       ========================================== */
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const db =
+      getFirestore(app);
+
+
+
+    /* ==========================================
+       ELEMENTS
+       ========================================== */
+
+    const productsContainer =
+      document.getElementById("products");
+
+    const searchInput =
+      document.getElementById("searchInput");
+
+
+    let allProducts = [];
+
+
+
+    /* ==========================================
+       DEFAULT PRODUCTS
+       ========================================== */
+
+    const defaultProducts = [
+
+      {
+        name: "Buddha",
+        price: 1.50,
+        image: "buddha.png",
+        stock: 2
+      },
+
+      {
+        name: "Spider",
+        price: 2.00,
+        image: "spider.png",
+        stock: 2
+      },
+
+      {
+        name: "Magma",
+        price: 1.00,
+        image: "magma.png",
+        stock: 0
+      },
+
+      {
+        name: "Love",
+        price: 2.00,
+        image: "love.png",
+        stock: 1
+      },
+
+      {
+        name: "Creation",
+        price: 3.00,
+        image: "creation.png",
+        stock: 1
+      },
+
+      {
+        name: "Rubber",
+        price: 1.00,
+        image: "rubber.png",
+        stock: 1
+      },
+
+      {
+        name: "Gas",
+        price: 5.00,
+        image: "gas.png",
+        stock: 1
+      }
+
+    ];
+
+
+
+    /* ==========================================
+       LOAD PRODUCTS
+       ========================================== */
+
+    onSnapshot(
+
+      collection(db, "products"),
+
+      (snapshot) => {
+
+        allProducts = [];
+
+
+        snapshot.forEach((doc) => {
+
+          const data =
+            doc.data();
+
+
+          allProducts.push({
+
+            id:
+              doc.id,
+
+            name:
+              data.name ||
+              data.title ||
+              doc.id,
+
+            price:
+              data.price ?? 0,
+
+            stock:
+              data.stock ??
+              data.quantity ??
+              0,
+
+            image:
+              data.image ||
+              "",
+
+            ...data,
+
+            id:
+              doc.id
+
+          });
+
+        });
+
+
+
+        /*
+
+          Kalau Firebase kosong,
+          guna default product.
+
+        */
+
+        if (
+          allProducts.length === 0
+        ) {
+
+          allProducts =
+            defaultProducts;
+
+        }
+
+
+        renderProducts(
+          allProducts
+        );
+
+      },
+
+
+      (error) => {
+
+        console.error(
+          "Firebase Error:",
+          error
+        );
+
+
+        productsContainer.innerHTML = `
+
+          <div class="empty">
+
+            <strong>
+              Tak dapat sambung Firebase.
+            </strong>
+
+            <br><br>
+
+            ${escapeHTML(
+              error.message
+            )}
+
+          </div>
+
+        `;
+
+      }
+
+    );
+
+
+
+    /* ==========================================
+       RENDER PRODUCTS
+       ========================================== */
+
+    function renderProducts(
+      products
+    ) {
+
+      productsContainer.innerHTML =
+        "";
+
+
+      if (
+        products.length === 0
+      ) {
+
+        productsContainer.innerHTML = `
+
+          <div class="empty">
+            Tiada product dijumpai.
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+
+      products.forEach(
+        (product) => {
+
+
+          const name =
+            product.name ||
+            "Unknown Fruit";
+
+
+          let price =
+            Number(
+              product.price
+            );
+
+
+          if (
+            Number.isNaN(price)
+          ) {
+
+            price = 0;
+
+          }
+
+
+          let stock =
+            Number(
+              product.stock
+            );
+
+
+          if (
+            Number.isNaN(stock)
+          ) {
+
+            stock = 0;
+
+          }
+
+
+          let image =
+            product.image;
+
+
+
+          /*
+
+            Kalau Firebase image kosong,
+            cari default image.
+
+          */
+
+          if (!image) {
+
+            const defaultProduct =
+              defaultProducts.find(
+                item =>
+                  item.name.toLowerCase() ===
+                  name.toLowerCase()
+              );
+
+
+            if (
+              defaultProduct
+            ) {
+
+              image =
+                defaultProduct.image;
+
+            }
+
+          }
+
+
+
+          /*
+
+            Kalau masih tiada image.
+
+          */
+
+          if (!image) {
+
+            image =
+              "https://placehold.co/300x300/111111/ffffff?text=" +
+              encodeURIComponent(
+                name
+              );
+
+          }
+
+
+
+          const outOfStock =
+            stock <= 0;
+
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "product-card";
+
+
+
+          card.innerHTML = `
+
+            <div class="product-image">
+
+              <img
+                src="${escapeAttribute(
+                  image
+                )}"
+                alt="${escapeAttribute(
+                  name
+                )}"
+                onerror="
+                  this.src='https://placehold.co/300x300/111111/ffffff?text=No+Image'
+                "
+              >
+
+            </div>
+
+
+            <div class="product-info">
+
+              <div class="product-name">
+                ${escapeHTML(
+                  name
+                )}
+              </div>
+
+
+              <div class="price">
+                RM ${price.toFixed(2)}
+              </div>
+
+
+              <div
+                class="stock ${
+                  outOfStock
+                    ? "out"
+                    : ""
+                }"
+              >
+
+                ${
+                  outOfStock
+                    ? "OUT OF STOCK"
+                    : "Stock: " + stock
+                }
+
+              </div>
+
+
+              <button
+                class="buy-btn"
+                ${
+                  outOfStock
+                    ? "disabled"
+                    : ""
+                }
+              >
+
+                ${
+                  outOfStock
+                    ? "OUT OF STOCK"
+                    : "BUY NOW"
+                }
+
+              </button>
+
+            </div>
+
+          `;
+
+
+
+          const button =
+            card.querySelector(
+              ".buy-btn"
+            );
+
+
+
+          if (
+            !outOfStock
+          ) {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                orderWhatsApp(
+                  product
+                );
+
+              }
+            );
+
+          }
+
+
+
+          productsContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
+    }
+
+
+
+    /* ==========================================
+       WHATSAPP + FIRESTORE ORDER
+       ========================================== */
+
+    async function orderWhatsApp(
+      product
+    ) {
+
+
+      const name =
+        product.name ||
+        "Unknown Fruit";
+
+
+      const price =
+        Number(
+          product.price || 0
+        );
+
+
+      const stock =
+        Number(
+          product.stock || 0
+        );
+
+
+      const productId =
+        product.id || "";
+
+
+
+      /* CHECK PRODUCT ID */
+
+      if (!productId) {
+
+        alert(
+          "Product ini belum mempunyai ID Firebase."
+        );
+
+        return;
+
+      }
+
+
+
+      /* CHECK STOCK */
+
+      if (
+        stock <= 0
+      ) {
+
+        alert(
+          "Maaf, stock sudah habis."
+        );
+
+        return;
+
+      }
+
+
+
+      /* ROBLOX USERNAME */
+
+      const robloxUsername =
+        prompt(
+          "Masukkan Roblox Username:"
+        );
+
+
+      if (
+        !robloxUsername ||
+        !robloxUsername.trim()
+      ) {
+
+        return;
+
+      }
+
+
+
+      try {
+
+
+        /*
+
+          SIMPAN ORDER KE FIRESTORE
+
+        */
+
+        const orderRef =
+          await addDoc(
+
+            collection(
+              db,
+              "orders"
+            ),
+
+            {
+
+              productId:
+                productId,
+
+              productName:
+                name,
+
+              price:
+                price,
+
+              robloxUsername:
+                robloxUsername.trim(),
+
+              status:
+                "Pending",
+
+              createdAt:
+                serverTimestamp()
+
+            }
+
+          );
+
+
+
+        /*
+
+          WHATSAPP MESSAGE
+
+        */
+
+        const text =
+
+          `Hi ZERAXXSTORE 👋\n\n` +
+
+          `Saya nak beli:\n\n` +
+
+          `🍎 Product: ${name}\n` +
+
+          `💰 Harga: RM ${price.toFixed(2)}\n` +
+
+          `🎮 Roblox Username: ${robloxUsername.trim()}\n\n` +
+
+          `🆔 Order ID: ${orderRef.id}\n\n` +
+
+          `Order saya telah dibuat melalui website.`;
+
+
+
+        const phone =
+          "60193019528";
+
+
+        const url =
+
+          "https://wa.me/" +
+          phone +
+          "?text=" +
+          encodeURIComponent(
+            text
+          );
+
+
+
+        /* OPEN WHATSAPP */
+
+        window.open(
+          url,
+          "_blank"
+        );
+
+
+
+        alert(
+          "Order berjaya dibuat! Sila teruskan di WhatsApp."
+        );
+
+
+      }
+
+      catch (
+        error
+      ) {
+
+
+        console.error(
+          "Order Error:",
+          error
+        );
+
+
+        alert(
+          "Order gagal dibuat: " +
+          error.message
+        );
+
+      }
+
+    }
+
+
+
+    /* ==========================================
+       SEARCH
+       ========================================== */
+
+    searchInput.addEventListener(
+      "input",
+      () => {
+
+
+        const keyword =
+          searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+
+        if (
+          !keyword
+        ) {
+
+          renderProducts(
+            allProducts
+          );
+
+          return;
+
+        }
+
+
+
+        const filtered =
+          allProducts.filter(
+            product => {
+
+
+              const name =
+                String(
+                  product.name ||
+                  ""
+                ).toLowerCase();
+
+
+              return name.includes(
+                keyword
+              );
+
+            }
+          );
+
+
+
+        renderProducts(
+          filtered
+        );
+
+      }
+    );
+
+
+
+    /* ==========================================
+       SECURITY HELPERS
+       ========================================== */
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value
+      )
+
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+
+        .replace(
+          /</g,
+          "&lt;"
+        )
+
+        .replace(
+          />/g,
+          "&gt;"
+        )
+
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+
+    function escapeAttribute(
+      value
+    ) {
+
+      return String(
+        value
+      )
+
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+  </script>
+
+</body>
+
+</html>
