@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="ms">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>ZERAXXSTORE | Admin</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -190,6 +197,11 @@
       background: #555;
     }
 
+    .actions button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .empty {
       text-align: center;
       color: #777;
@@ -219,11 +231,16 @@
       .actions button {
         flex: 1;
       }
+
     }
+
   </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -278,7 +295,7 @@
 </div>
 
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN -->
 
 <div
   class="container"
@@ -305,592 +322,366 @@
 
 <script type="module">
 
-  import {
-    initializeApp
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+/* ==========================================
+   FIREBASE
+========================================== */
+
+import {
+  initializeApp
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-  import {
-    getFirestore,
-    collection,
-    onSnapshot,
-    doc,
-    updateDoc
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  doc,
+  runTransaction
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-  /* ==========================================
-     FIREBASE
-  ========================================== */
+/* ==========================================
+   CONFIG
+========================================== */
 
-  const firebaseConfig = {
+const firebaseConfig = {
 
-    apiKey:
-      "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
+  apiKey:
+    "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
 
-    authDomain:
-      "zerraxx-store.firebaseapp.com",
+  authDomain:
+    "zerraxx-store.firebaseapp.com",
 
-    projectId:
-      "zerraxx-store",
+  projectId:
+    "zerraxx-store",
 
-    storageBucket:
-      "zerraxx-store.firebasestorage.app",
+  storageBucket:
+    "zerraxx-store.firebasestorage.app",
 
-    messagingSenderId:
-      "946691118004",
+  messagingSenderId:
+    "946691118004",
 
-    appId:
-      "1:946691118004:web:cf189cc85f11380c3fd8e1",
+  appId:
+    "1:946691118004:web:cf189cc85f11380c3fd8e1",
 
-    measurementId:
-      "G-006D7F68L4"
+  measurementId:
+    "G-006D7F68L4"
 
-  };
-
-
-  const app =
-    initializeApp(firebaseConfig);
+};
 
 
-  const auth =
-    getAuth(app);
+const app =
+  initializeApp(firebaseConfig);
 
 
-  const db =
-    getFirestore(app);
+const auth =
+  getAuth(app);
 
 
-  /* ==========================================
-     ELEMENTS
-  ========================================== */
-
-  const loginBox =
-    document.getElementById("loginBox");
-
-  const adminPanel =
-    document.getElementById("adminPanel");
-
-  const loginBtn =
-    document.getElementById("loginBtn");
-
-  const logoutBtn =
-    document.getElementById("logoutBtn");
-
-  const loginError =
-    document.getElementById("loginError");
-
-  const ordersContainer =
-    document.getElementById("orders");
+const db =
+  getFirestore(app);
 
 
-  /* ==========================================
-     LOGIN
-  ========================================== */
+/* ==========================================
+   ELEMENTS
+========================================== */
 
-  loginBtn.addEventListener(
-    "click",
-    async () => {
+const loginBox =
+  document.getElementById("loginBox");
 
-      const email =
-        document.getElementById("email")
-          .value.trim();
+const adminPanel =
+  document.getElementById("adminPanel");
 
-      const password =
-        document.getElementById("password")
-          .value;
+const loginBtn =
+  document.getElementById("loginBtn");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+const loginError =
+  document.getElementById("loginError");
+
+const ordersContainer =
+  document.getElementById("orders");
 
 
-      if (!email || !password) {
+/* ==========================================
+   LOGIN
+========================================== */
 
-        loginError.textContent =
-          "Masukkan email dan password.";
+loginBtn.addEventListener(
+  "click",
+  async () => {
 
-        return;
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
 
-      }
+    const password =
+      document
+        .getElementById("password")
+        .value;
 
+
+    if (!email || !password) {
 
       loginError.textContent =
-        "Logging in...";
-
-
-      try {
-
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        loginError.textContent =
-          "Login gagal. Semak email dan password.";
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================
-     LOGOUT
-  ========================================== */
-
-  logoutBtn.addEventListener(
-    "click",
-    async () => {
-
-      await signOut(auth);
-
-    }
-  );
-
-
-  /* ==========================================
-     AUTH STATE
-  ========================================== */
-
-  onAuthStateChanged(
-    auth,
-    (user) => {
-
-      if (user) {
-
-        loginBox.style.display =
-          "none";
-
-        adminPanel.style.display =
-          "block";
-
-        logoutBtn.style.display =
-          "block";
-
-        loadOrders();
-
-      } else {
-
-        loginBox.style.display =
-          "block";
-
-        adminPanel.style.display =
-          "none";
-
-        logoutBtn.style.display =
-          "none";
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================
-     LOAD ORDERS
-  ========================================== */
-
-  function loadOrders() {
-
-    onSnapshot(
-
-      collection(
-        db,
-        "orders"
-      ),
-
-      (snapshot) => {
-
-        const orders = [];
-
-
-        snapshot.forEach(
-          (orderDoc) => {
-
-            orders.push({
-
-              id:
-                orderDoc.id,
-
-              ...orderDoc.data()
-
-            });
-
-          }
-        );
-
-
-        /*
-          Order terbaru di atas
-        */
-
-        orders.sort(
-          (a, b) => {
-
-            const timeA =
-              a.createdAt?.seconds || 0;
-
-            const timeB =
-              b.createdAt?.seconds || 0;
-
-            return timeB - timeA;
-
-          }
-        );
-
-
-        renderOrders(
-          orders
-        );
-
-      },
-
-      (error) => {
-
-        console.error(error);
-
-        ordersContainer.innerHTML = `
-
-          <div class="empty">
-
-            Gagal membaca orders.<br><br>
-
-            ${escapeHTML(
-              error.message
-            )}
-
-          </div>
-
-        `;
-
-      }
-
-    );
-
-  }
-
-
-  /* ==========================================
-     RENDER ORDERS
-  ========================================== */
-
-  function renderOrders(
-    orders
-  ) {
-
-    ordersContainer.innerHTML =
-      "";
-
-
-    if (
-      orders.length === 0
-    ) {
-
-      ordersContainer.innerHTML = `
-
-        <div class="empty">
-          Belum ada order.
-        </div>
-
-      `;
+        "Masukkan email dan password.";
 
       return;
 
     }
 
 
-    orders.forEach(
-      (order) => {
+    loginError.textContent =
+      "Logging in...";
 
-        const status =
-          order.status ||
-          "Pending";
-
-
-        const statusClass =
-          status
-            .toLowerCase()
-            .replace(
-              " ",
-              "-"
-            );
-
-
-        let date =
-          "Belum tersedia";
-
-
-        if (
-          order.createdAt
-        ) {
-
-          date =
-            new Date(
-              order.createdAt.seconds * 1000
-            ).toLocaleString(
-              "ms-MY"
-            );
-
-        }
-
-
-        const card =
-          document.createElement(
-            "div"
-          );
-
-
-        card.className =
-          "order " +
-          statusClass;
-
-
-        card.innerHTML = `
-
-          <div class="order-top">
-
-            <div class="product-name">
-              ${escapeHTML(
-                order.productName ||
-                "Unknown Product"
-              )}
-            </div>
-
-            <div class="status">
-              ${escapeHTML(
-                status
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="details">
-
-            <div>
-              🎮 Roblox:
-              <strong>
-                ${escapeHTML(
-                  order.robloxUsername ||
-                  "-"
-                )}
-              </strong>
-            </div>
-
-            <div>
-              💰 Harga:
-              <strong>
-                RM ${Number(
-                  order.price || 0
-                ).toFixed(2)}
-              </strong>
-            </div>
-
-            <div>
-              🆔 Order ID:
-              <strong>
-                ${escapeHTML(
-                  order.id
-                )}
-              </strong>
-            </div>
-
-            <div>
-              🕐 Masa:
-              <strong>
-                ${escapeHTML(
-                  date
-                )}
-              </strong>
-            </div>
-
-          </div>
-
-
-          <div class="actions">
-
-            <button
-              class="pending-btn"
-              data-id="${escapeAttribute(
-                order.id
-              )}"
-              data-status="Pending"
-            >
-              Pending
-            </button>
-
-
-            <button
-              class="complete"
-              data-id="${escapeAttribute(
-                order.id
-              )}"
-              data-status="Completed"
-            >
-              Completed
-            </button>
-
-
-            <button
-              class="cancel"
-              data-id="${escapeAttribute(
-                order.id
-              )}"
-              data-status="Cancelled"
-            >
-              Cancelled
-            </button>
-
-          </div>
-
-        `;
-
-
-        const buttons =
-          card.querySelectorAll(
-            "button"
-          );
-
-
-        buttons.forEach(
-          (button) => {
-
-            button.addEventListener(
-              "click",
-              () => {
-
-                updateOrderStatus(
-
-                  button.dataset.id,
-
-                  button.dataset.status
-
-                );
-
-              }
-            );
-
-          }
-        );
-
-
-        ordersContainer.appendChild(
-          card
-        );
-
-      }
-    );
-
-  }
-
-
-  /* ==========================================
-     UPDATE STATUS
-  ========================================== */
-
-  async function updateOrderStatus(
-    orderId,
-    newStatus
-  ) {
 
     try {
 
-      await updateDoc(
-
-        doc(
-          db,
-          "orders",
-          orderId
-        ),
-
-        {
-          status:
-            newStatus
-        }
-
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
 
     } catch (error) {
 
       console.error(error);
 
-      alert(
-        "Gagal update status: " +
-        error.message
-      );
+      loginError.textContent =
+        "Login gagal: " +
+        error.message;
 
     }
 
   }
+);
 
 
-  /* ==========================================
-     SECURITY HELPERS
-  ========================================== */
+/* ==========================================
+   LOGOUT
+========================================== */
 
-  function escapeHTML(
-    value
+logoutBtn.addEventListener(
+  "click",
+  async () => {
+
+    await signOut(auth);
+
+  }
+);
+
+
+/* ==========================================
+   AUTH
+========================================== */
+
+onAuthStateChanged(
+  auth,
+  (user) => {
+
+    if (user) {
+
+      loginBox.style.display =
+        "none";
+
+      adminPanel.style.display =
+        "block";
+
+      logoutBtn.style.display =
+        "block";
+
+      loadOrders();
+
+    } else {
+
+      loginBox.style.display =
+        "block";
+
+      adminPanel.style.display =
+        "none";
+
+      logoutBtn.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   LOAD ORDERS
+========================================== */
+
+function loadOrders() {
+
+  onSnapshot(
+
+    collection(
+      db,
+      "orders"
+    ),
+
+    (snapshot) => {
+
+      const orders = [];
+
+
+      snapshot.forEach(
+        (orderDoc) => {
+
+          orders.push({
+
+            id:
+              orderDoc.id,
+
+            ...orderDoc.data()
+
+          });
+
+        }
+      );
+
+
+      orders.sort(
+        (a, b) => {
+
+          const timeA =
+            a.createdAt?.seconds || 0;
+
+          const timeB =
+            b.createdAt?.seconds || 0;
+
+          return timeB - timeA;
+
+        }
+      );
+
+
+      renderOrders(
+        orders
+      );
+
+    },
+
+    (error) => {
+
+      console.error(error);
+
+      ordersContainer.innerHTML = `
+
+        <div class="empty">
+
+          Gagal membaca orders.
+
+          <br><br>
+
+          ${escapeHTML(
+            error.message
+          )}
+
+        </div>
+
+      `;
+
+    }
+
+  );
+
+}
+
+
+/* ==========================================
+   RENDER
+========================================== */
+
+function renderOrders(
+  orders
+) {
+
+  ordersContainer.innerHTML =
+    "";
+
+
+  if (
+    orders.length === 0
   ) {
 
-    return String(value)
+    ordersContainer.innerHTML = `
 
-      .replace(
-        /&/g,
-        "&amp;"
-      )
+      <div class="empty">
+        Belum ada order.
+      </div>
 
-      .replace(
-        /</g,
-        "&lt;"
-      )
+    `;
 
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
-      );
+    return;
 
   }
 
 
-  function escapeAttribute(
-    value
-  ) {
+  orders.forEach(
+    (order) => {
 
-    return String(value)
+      const status =
+        order.status ||
+        "Pending";
 
-      .replace(
-        /"/g,
-        "&quot;"
-      )
 
-      .replace(
-        /'/g,
-        "&#039;"
-      );
+      const statusClass =
+        status
+          .toLowerCase()
+          .replace(
+            " ",
+            "-"
+          );
 
-  }
 
-</script>
+      let date =
+        "Belum tersedia";
 
-</body>
-</html>
+
+      if (
+        order.createdAt
+      ) {
+
+        date =
+          new Date(
+            order.createdAt.seconds * 1000
+          ).toLocaleString(
+            "ms-MY"
+          );
+
+      }
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+
+      card.className =
+        "order " +
+        statusClass;
+
+
+      card.innerHTML = `
+
+        <div class="order
