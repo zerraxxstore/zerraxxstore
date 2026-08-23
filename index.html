@@ -1,716 +1,287 @@
 <!DOCTYPE html>
 <html lang="ms">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Zerraxx Store</title>
+  <title>ZERAXXSTORE | Blox Fruits Store Malaysia</title>
+
+  <meta name="description" content="ZERAXXSTORE (ZERAXX STORE) ialah kedai Blox Fruits Malaysia. Beli Blox Fruits seperti Buddha, Spider, Magma, Love, Creation dan Rubber.">
+
+  <meta name="keywords" content="ZERAXXSTORE, ZERAXX STORE, Zeraxx Store Malaysia, Blox Fruits Malaysia, Blox Fruits Store, beli Blox Fruits, Buddha Fruit, Spider Fruit, Magma Fruit, Love Fruit, Creation Fruit, Rubber Fruit">
+
+  <meta name="robots" content="index, follow">
+
+  <meta name="author" content="ZERAXXSTORE">
+
+  <meta property="og:title" content="ZERAXXSTORE | Blox Fruits Store Malaysia">
+  <meta property="og:description" content="Beli Blox Fruits di ZERAXXSTORE. Buddha, Spider, Magma, Love, Creation, Rubber dan banyak lagi.">
+  <meta property="og:type" content="website">
+
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #0f1115;
-      color: white;
+      background: #080808;
+      color: #fff;
       min-height: 100vh;
     }
 
+
+    /* HEADER */
+
     header {
-      background: #151922;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #292e3a;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(8, 8, 8, 0.97);
+      border-bottom: 1px solid #292929;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
     }
 
-    header h1 {
-      font-size: 28px;
-      margin-bottom: 6px;
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      color: #ff2020;
+      letter-spacing: 1px;
     }
 
-    header p {
-      color: #aaa;
+    .logo span {
+      color: #fff;
+    }
+
+    .search {
+      width: 260px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 25px;
+      border: 1px solid #333;
+      outline: none;
+      background: #151515;
+      color: #fff;
       font-size: 14px;
     }
 
-    .container {
-      width: 92%;
-      max-width: 1100px;
-      margin: 25px auto;
+    .search input:focus {
+      border-color: #ff2020;
     }
 
-    .username-box {
-      background: #171b24;
-      border: 1px solid #292e3a;
-      padding: 18px;
-      border-radius: 14px;
-      margin-bottom: 25px;
+
+    /* HERO */
+
+    .hero {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
     }
 
-    .username-box label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-
-    .username-box input {
+    .poster {
       width: 100%;
-      padding: 13px;
-      border-radius: 9px;
-      border: 1px solid #343b4a;
-      background: #0f1115;
-      color: white;
-      outline: none;
-      font-size: 15px;
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid #292929;
+      background: #111;
     }
 
-    .username-box input:focus {
-      border-color: #5865f2;
+    .poster img {
+      display: block;
+      width: 100%;
+      max-height: 430px;
+      object-fit: cover;
     }
 
-    #products {
+
+    /* STORE */
+
+    .store-info {
+      max-width: 1200px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .store-title {
+      font-size: 29px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .store-title span {
+      color: #ff2020;
+    }
+
+    .description {
+      color: #999;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+
+    /* PRODUCTS */
+
+    .products-section {
+      max-width: 1200px;
+      margin: 30px auto 60px;
+      padding: 0 15px;
+    }
+
+    .section-title {
+      font-size: 23px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .section-title span {
+      color: #ff2020;
+    }
+
+    .products {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 16px;
     }
 
-    .product {
-      background: #171b24;
-      border: 1px solid #292e3a;
+    .product-card {
+      background: #111;
+      border: 1px solid #292929;
       border-radius: 14px;
       overflow: hidden;
-      transition: 0.2s;
+      transition: 0.2s ease;
     }
 
-    .product:hover {
-      transform: translateY(-3px);
-      border-color: #5865f2;
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: #ff2020;
+      box-shadow: 0 8px 25px rgba(255, 0, 0, 0.15);
     }
 
-    .product img {
+    .product-image {
       width: 100%;
-      height: 180px;
+      height: 175px;
+      background: #181818;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      background: #10131a;
-      display: block;
+      padding: 10px;
     }
 
     .product-info {
-      padding: 15px;
+      padding: 13px;
     }
 
     .product-name {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .product-price {
-      color: #58e38a;
       font-size: 17px;
-      font-weight: bold;
-      margin-bottom: 13px;
+      font-weight: 800;
+      margin-bottom: 7px;
     }
 
-    .order-btn {
+    .price {
+      color: #ff3030;
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .stock {
+      color: #61e76a;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .stock.out {
+      color: #ff4040;
+    }
+
+    .buy-btn {
       width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 9px;
-      background: #25d366;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #e91515;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .order-btn:hover {
-      opacity: 0.9;
+    .buy-btn:hover {
+      background: #ff2929;
     }
 
-    .order-btn:disabled {
-      opacity: 0.5;
+    .buy-btn:disabled {
+      background: #333;
+      color: #777;
       cursor: not-allowed;
     }
 
+
+    /* LOADING */
+
     .loading,
-    .empty,
-    .error {
-      text-align: center;
-      padding: 30px;
-      color: #aaa;
+    .empty {
       grid-column: 1 / -1;
+      text-align: center;
+      padding: 45px 10px;
+      color: #777;
     }
 
-    .error {
-      color: #ff7070;
-    }
+
+    /* FOOTER */
 
     footer {
+      border-top: 1px solid #222;
+      background: #050505;
+      padding: 25px 15px;
       text-align: center;
       color: #777;
-      padding: 30px 10px;
       font-size: 13px;
     }
 
-    /* POPUP */
-    .modal {
-      display: none;
+    footer strong {
+      color: #ff2020;
+    }
+
+
+    /* WHATSAPP */
+
+    .whatsapp {
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 9999;
-    }
-
-    .modal-box {
-      width: 100%;
-      max-width: 400px;
-      background: #171b24;
-      border: 1px solid #303746;
-      border-radius: 15px;
-      padding: 22px;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 15px;
-    }
-
-    .modal-product {
-      color: #aaa;
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .modal-buttons button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .confirm-btn {
+      right: 18px;
+      bottom: 18px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       background: #25d366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
+      text-decoration: none;
+      font-size: 25px;
+      font-weight: bold;
+      z-index: 999;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     }
 
-    .cancel-btn {
-      background: #303642;
-      color: white;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <h1>🔥 ZERRAXX STORE</h1>
-  <p>Blox Fruits Items</p>
-</header>
-
-<div class="container">
-
-  <div class="username-box">
-    <label for="robloxUsername">🎮 Roblox Username</label>
-    <input
-      type="text"
-      id="robloxUsername"
-      placeholder="Masukkan username Roblox"
-      maxlength="30"
-    >
-  </div>
-
-  <div id="products">
-    <div class="loading">Loading products...</div>
-  </div>
-
-</div>
-
-<footer>
-  © 2026 Zerraxx Store
-</footer>
-
-
-<!-- ORDER POPUP -->
-<div class="modal" id="orderModal">
-
-  <div class="modal-box">
-
-    <h2>Confirm Order</h2>
-
-    <div class="modal-product" id="modalProductInfo">
-      Product
-    </div>
-
-    <div class="modal-buttons">
-
-      <button
-        class="cancel-btn"
-        onclick="closeModal()">
-        Batal
-      </button>
-
-      <button
-        class="confirm-btn"
-        id="confirmOrderBtn">
-        Order WhatsApp
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<script type="module">
-
-  /* =========================================
-     FIREBASE
-  ========================================= */
-
-  import {
-    initializeApp
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-  import {
-    getFirestore,
-    collection,
-    getDocs,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
-    authDomain: "zerraxx-store.firebaseapp.com",
-    projectId: "zerraxx-store",
-    storageBucket: "zerraxx-store.firebasestorage.app",
-    messagingSenderId: "946691118004",
-    appId: "1:946691118004:web:cf189cc85f11380c3fd8e1",
-    measurementId: "G-006D7F68L4"
-  };
-
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-
-  /* =========================================
-     ELEMENTS
-  ========================================= */
-
-  const productsContainer =
-    document.getElementById("products");
-
-  const usernameInput =
-    document.getElementById("robloxUsername");
-
-  const orderModal =
-    document.getElementById("orderModal");
-
-  const modalProductInfo =
-    document.getElementById("modalProductInfo");
-
-  const confirmOrderBtn =
-    document.getElementById("confirmOrderBtn");
-
-
-  let selectedProduct = null;
-
-
-  /* =========================================
-     LOAD PRODUCTS
-  ========================================= */
-
-  async function loadProducts() {
-
-    try {
-
-      productsContainer.innerHTML =
-        '<div class="loading">Loading products...</div>';
-
-      const snapshot =
-        await getDocs(collection(db, "products"));
-
-      if (snapshot.empty) {
-
-        productsContainer.innerHTML =
-          '<div class="empty">Belum ada produk.</div>';
-
-        return;
-      }
-
-      productsContainer.innerHTML = "";
-
-      snapshot.forEach((doc) => {
-
-        const product = {
-          id: doc.id,
-          ...doc.data()
-        };
-
-        const card =
-          document.createElement("div");
-
-        card.className = "product";
-
-
-        /*
-          Kalau image kosong, guna placeholder.
-        */
-
-        const image =
-          product.image ||
-          "https://via.placeholder.com/500x500?text=Product";
-
-
-        const name =
-          product.name ||
-          "Unnamed Product";
-
-
-        const price =
-          Number(product.price || 0);
-
-
-        card.innerHTML = `
-
-          <img
-            src="${escapeHTML(image)}"
-            alt="${escapeHTML(name)}"
-            onerror="this.src='https://via.placeholder.com/500x500?text=No+Image'"
-          >
-
-          <div class="product-info">
-
-            <div class="product-name">
-              ${escapeHTML(name)}
-            </div>
-
-            <div class="product-price">
-              RM ${price.toFixed(2)}
-            </div>
-
-            <button
-              class="order-btn"
-              data-product-id="${escapeHTML(product.id)}"
-            >
-              Order Sekarang
-            </button>
-
-          </div>
-
-        `;
-
-
-        const button =
-          card.querySelector(".order-btn");
-
-
-        button.addEventListener("click", () => {
-
-          openOrder(product);
-
-        });
-
-
-        productsContainer.appendChild(card);
-
-      });
-
-    }
-
-    catch (error) {
-
-      console.error(error);
-
-      productsContainer.innerHTML = `
-        <div class="error">
-          Gagal load produk.<br>
-          Pastikan Firestore Rules dan collection products betul.
-        </div>
-      `;
-
-    }
-
-  }
-
-
-  /* =========================================
-     OPEN ORDER
-  ========================================= */
-
-  function openOrder(product) {
-
-    const username =
-      usernameInput.value.trim();
-
-
-    if (!username) {
-
-      alert(
-        "Sila masukkan Roblox Username dahulu."
-      );
-
-      usernameInput.focus();
-
-      return;
-
-    }
-
-
-    selectedProduct = product;
-
-
-    const name =
-      product.name || "Product";
-
-
-    const price =
-      Number(product.price || 0);
-
-
-    modalProductInfo.innerHTML = `
-
-      <strong>${escapeHTML(name)}</strong><br>
-
-      Harga: RM ${price.toFixed(2)}<br>
-
-      Roblox Username:
-      ${escapeHTML(username)}
-
-    `;
-
-
-    orderModal.style.display = "flex";
-
-  }
-
-
-  /* =========================================
-     CLOSE MODAL
-  ========================================= */
-
-  window.closeModal = function() {
-
-    orderModal.style.display = "none";
-
-    selectedProduct = null;
-
-  };
-
-
-  /* =========================================
-     ORDER WHATSAPP
-  ========================================= */
-
-  async function orderWhatsApp(product) {
-
-    const robloxUsername =
-      usernameInput.value.trim();
-
-
-    if (!robloxUsername) {
-
-      alert(
-        "Sila masukkan Roblox Username."
-      );
-
-      return;
-
-    }
-
-
-    if (!product) {
-
-      alert(
-        "Product tidak dijumpai."
-      );
-
-      return;
-
-    }
-
-
-    const productId =
-      product.id;
-
-
-    const name =
-      product.name || "Product";
-
-
-    const price =
-      Number(product.price || 0);
-
-
-    try {
-
-      confirmOrderBtn.disabled = true;
-
-      confirmOrderBtn.textContent =
-        "Saving Order...";
-
-
-      /*
-        SIMPAN ORDER KE FIRESTORE
-      */
-
-      const orderRef = await addDoc(
-        collection(db, "orders"),
-        {
-          productId: productId,
-
-          productName: name,
-
-          price: price,
-
-          robloxUsername: robloxUsername,
-
-          status: "Pending",
-
-          createdAt: serverTimestamp()
-        }
-      );
-
-
-      /*
-        BUAT MESEJ WHATSAPP
-      */
-
-      const message =
-
-        `🔥 *ZERRAXX STORE - ORDER*%0A%0A` +
-
-        `🎮 Roblox Username: ${robloxUsername}%0A` +
-
-        `📦 Product: ${name}%0A` +
-
-        `💰 Harga: RM ${price.toFixed(2)}%0A` +
-
-        `🆔 Order ID: ${orderRef.id}%0A%0A` +
-
-        `Status: Pending%0A%0A` +
-
-        `Saya nak order item ini.`;
-
-
-      /*
-        NOMBOR WHATSAPP
-        0193019528
-      */
-
-      const whatsappNumber =
-        "60193019528";
-
-
-      const whatsappURL =
-        `https://wa.me/${whatsappNumber}?text=${message}`;
-
-
-      /*
-        Tutup popup
-      */
-
-      orderModal.style.display = "none";
-
-
-      /*
-        Buka WhatsApp
-      */
-
-      window.open(
-        whatsappURL,
-        "_blank"
-      );
-
-
-    }
-
-    catch (error) {
-
-      console.error(
-        "Order error:",
-        error
-      );
-
-      alert(
-        "Order gagal disimpan. Sila cuba lagi."
-      );
-
-    }
-
-    finally {
-
-      confirmOrderBtn.disabled = false;
-
-      confirmOrderBtn.textContent =
-        "Order WhatsApp";
-
-    }
-
-  }
-
-
-  /* =========================================
-     CONFIRM BUTTON
-  ========================================= */
-
-  confirmOrderBtn.addEventListener(
-    "click",
-    () => {
-
-      orderWhatsApp(
-        selectedProduct
-      );
-
-    }
-  );
-
-
-  /* =========================================
-     ESCAPE HTML
-  ========================================= */
-
-  function escapeHTML(value) {
-
-    return String(value)
-
-      .replace(/&/g, "&amp;")
-
-      .replace(/</g, "&lt;")
-
-      .replace(/>/g, "&gt;")
-
-      .replace(/"/g, "&quot;")
-
-      .replace(/'/g, "&#039;");
-
-  }
-
-
-  /* =========================================
-     START
-  ========================================= */
-
-  loadProducts();
-
-</script>
-
-</body>
-</html>
+    .whatsapp:hover
