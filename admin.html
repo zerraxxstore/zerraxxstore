@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,40 +16,69 @@
 
     body {
       background: #080808;
-      color: #fff;
+      color: white;
       min-height: 100vh;
-      padding: 20px;
+    }
+
+    header {
+      background: #0d0d0d;
+      border-bottom: 1px solid #292929;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 900;
+      color: #ff2020;
+    }
+
+    .logo span {
+      color: white;
+    }
+
+    .logout {
+      border: 0;
+      background: #333;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      cursor: pointer;
     }
 
     .container {
-      max-width: 900px;
-      margin: auto;
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 15px;
     }
 
-    h1 {
-      color: #ff2020;
-      margin-bottom: 20px;
-    }
-
-    .box {
+    .login-box {
+      max-width: 400px;
+      margin: 70px auto;
       background: #111;
       border: 1px solid #292929;
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    .login-box h2 {
       margin-bottom: 20px;
     }
 
-    input {
+    .login-box input {
       width: 100%;
       padding: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border-radius: 8px;
       border: 1px solid #333;
       background: #181818;
       color: white;
+      outline: none;
     }
 
-    button {
+    .login-btn {
       width: 100%;
       padding: 12px;
       border: 0;
@@ -60,96 +89,213 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #ff2929;
-    }
-
-    .order {
-      border: 1px solid #292929;
-      padding: 15px;
-      border-radius: 10px;
+    .error {
+      color: #ff5555;
       margin-top: 12px;
+      font-size: 14px;
     }
 
-    .status {
-      color: #ffd000;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-
-    .confirm {
-      background: #159447;
-      margin-top: 8px;
-    }
-
-    .reject {
-      background: #555;
-      margin-top: 8px;
-    }
-
-    .logout {
-      background: #333;
-      margin-bottom: 20px;
-    }
-
-    .hidden {
+    #adminPanel {
       display: none;
     }
 
-    .error {
-      color: #ff4040;
-      margin-top: 10px;
+    .title {
+      font-size: 27px;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+
+    .title span {
+      color: #ff2020;
+    }
+
+    .orders {
+      display: grid;
+      gap: 15px;
+    }
+
+    .order {
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      padding: 17px;
+    }
+
+    .order.pending {
+      border-left: 4px solid #ffb020;
+    }
+
+    .order.completed {
+      border-left: 4px solid #35d05f;
+    }
+
+    .order.cancelled {
+      border-left: 4px solid #ff3030;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .product-name {
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    .status {
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: #333;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .details {
+      color: #aaa;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .details strong {
+      color: white;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .actions button {
+      border: 0;
+      padding: 9px 12px;
+      border-radius: 7px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .complete {
+      background: #168a3b;
+    }
+
+    .cancel {
+      background: #b51e1e;
+    }
+
+    .pending-btn {
+      background: #555;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 50px 10px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #777;
+      padding: 40px;
+    }
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 14px;
+      }
+
+      .order-top {
+        flex-direction: column;
+      }
+
+      .actions {
+        flex-wrap: wrap;
+      }
+
+      .actions button {
+        flex: 1;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-  <h1>ZERAXXSTORE ADMIN</h1>
-
-  <!-- LOGIN -->
-
-  <div id="loginBox" class="box">
-
-    <input
-      id="email"
-      type="email"
-      placeholder="Admin email"
-    >
-
-    <input
-      id="password"
-      type="password"
-      placeholder="Password"
-    >
-
-    <button id="loginBtn">
-      LOGIN
-    </button>
-
-    <div id="loginError" class="error"></div>
-
+  <div class="logo">
+    ZERAXX<span>STORE</span>
   </div>
 
+  <button
+    class="logout"
+    id="logoutBtn"
+    style="display:none;"
+  >
+    Logout
+  </button>
 
-  <!-- ADMIN PANEL -->
+</header>
 
-  <div id="adminPanel" class="hidden">
 
-    <button id="logoutBtn" class="logout">
-      LOGOUT
-    </button>
+<!-- LOGIN -->
 
-    <div class="box">
+<div
+  class="login-box"
+  id="loginBox"
+>
 
-      <h2>Orders</h2>
+  <h2>🔐 Admin Login</h2>
 
-      <div id="orders">
-        Loading orders...
-      </div>
+  <input
+    type="email"
+    id="email"
+    placeholder="Admin Email"
+  >
 
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+  >
+
+  <button
+    class="login-btn"
+    id="loginBtn"
+  >
+    LOGIN
+  </button>
+
+  <div
+    class="error"
+    id="loginError"
+  ></div>
+
+</div>
+
+
+<!-- ADMIN PANEL -->
+
+<div
+  class="container"
+  id="adminPanel"
+>
+
+  <div class="title">
+    📦 <span>Orders</span>
+  </div>
+
+  <div
+    class="orders"
+    id="orders"
+  >
+
+    <div class="loading">
+      Loading orders...
     </div>
 
   </div>
@@ -163,6 +309,7 @@
     initializeApp
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
+
   import {
     getAuth,
     signInWithEmailAndPassword,
@@ -170,34 +317,42 @@
     signOut
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
   import {
     getFirestore,
     collection,
-    query,
-    orderBy,
     onSnapshot,
     doc,
-    runTransaction
+    updateDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-  /* FIREBASE CONFIG */
+  /* ==========================================
+     FIREBASE
+  ========================================== */
 
   const firebaseConfig = {
 
-    apiKey: "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
+    apiKey:
+      "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
 
-    authDomain: "zerraxx-store.firebaseapp.com",
+    authDomain:
+      "zerraxx-store.firebaseapp.com",
 
-    projectId: "zerraxx-store",
+    projectId:
+      "zerraxx-store",
 
-    storageBucket: "zerraxx-store.firebasestorage.app",
+    storageBucket:
+      "zerraxx-store.firebasestorage.app",
 
-    messagingSenderId: "946691118004",
+    messagingSenderId:
+      "946691118004",
 
-    appId: "1:946691118004:web:cf189cc85f11380c3fd8e1",
+    appId:
+      "1:946691118004:web:cf189cc85f11380c3fd8e1",
 
-    measurementId: "G-006D7F68L4"
+    measurementId:
+      "G-006D7F68L4"
 
   };
 
@@ -205,12 +360,18 @@
   const app =
     initializeApp(firebaseConfig);
 
+
   const auth =
     getAuth(app);
+
 
   const db =
     getFirestore(app);
 
+
+  /* ==========================================
+     ELEMENTS
+  ========================================== */
 
   const loginBox =
     document.getElementById("loginBox");
@@ -218,26 +379,48 @@
   const adminPanel =
     document.getElementById("adminPanel");
 
+  const loginBtn =
+    document.getElementById("loginBtn");
+
+  const logoutBtn =
+    document.getElementById("logoutBtn");
+
+  const loginError =
+    document.getElementById("loginError");
+
   const ordersContainer =
     document.getElementById("orders");
 
 
-  /* LOGIN */
+  /* ==========================================
+     LOGIN
+  ========================================== */
 
-  document
-    .getElementById("loginBtn")
-    .addEventListener("click", async () => {
+  loginBtn.addEventListener(
+    "click",
+    async () => {
 
       const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
+        document.getElementById("email")
+          .value.trim();
 
       const password =
-        document
-          .getElementById("password")
+        document.getElementById("password")
           .value;
+
+
+      if (!email || !password) {
+
+        loginError.textContent =
+          "Masukkan email dan password.";
+
+        return;
+
+      }
+
+
+      loginError.textContent =
+        "Logging in...";
 
 
       try {
@@ -250,54 +433,10 @@
 
       } catch (error) {
 
-        document
-          .getElementById("loginError")
-          .textContent =
-          error.message;
+        console.error(error);
 
-      }
-
-    });
-
-
-  /* LOGOUT */
-
-  document
-    .getElementById("logoutBtn")
-    .addEventListener("click", () => {
-
-      signOut(auth);
-
-    });
-
-
-  /* AUTH STATE */
-
-  onAuthStateChanged(
-    auth,
-    (user) => {
-
-      if (user) {
-
-        loginBox.classList.add(
-          "hidden"
-        );
-
-        adminPanel.classList.remove(
-          "hidden"
-        );
-
-        loadOrders();
-
-      } else {
-
-        loginBox.classList.remove(
-          "hidden"
-        );
-
-        adminPanel.classList.add(
-          "hidden"
-        );
+        loginError.textContent =
+          "Login gagal. Semak email dan password.";
 
       }
 
@@ -305,156 +444,348 @@
   );
 
 
-  /* LOAD ORDERS */
+  /* ==========================================
+     LOGOUT
+  ========================================== */
+
+  logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+      await signOut(auth);
+
+    }
+  );
+
+
+  /* ==========================================
+     AUTH STATE
+  ========================================== */
+
+  onAuthStateChanged(
+    auth,
+    (user) => {
+
+      if (user) {
+
+        loginBox.style.display =
+          "none";
+
+        adminPanel.style.display =
+          "block";
+
+        logoutBtn.style.display =
+          "block";
+
+        loadOrders();
+
+      } else {
+
+        loginBox.style.display =
+          "block";
+
+        adminPanel.style.display =
+          "none";
+
+        logoutBtn.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+  /* ==========================================
+     LOAD ORDERS
+  ========================================== */
 
   function loadOrders() {
 
-    const ordersQuery =
-      query(
-        collection(db, "orders"),
-        orderBy("createdAt", "desc")
-      );
-
-
     onSnapshot(
-      ordersQuery,
+
+      collection(
+        db,
+        "orders"
+      ),
+
       (snapshot) => {
 
-        ordersContainer.innerHTML = "";
-
-
-        if (snapshot.empty) {
-
-          ordersContainer.innerHTML =
-            "<p>Tiada order.</p>";
-
-          return;
-
-        }
+        const orders = [];
 
 
         snapshot.forEach(
           (orderDoc) => {
 
-            const order =
-              orderDoc.data();
+            orders.push({
+
+              id:
+                orderDoc.id,
+
+              ...orderDoc.data()
+
+            });
+
+          }
+        );
 
 
-            const div =
-              document.createElement(
-                "div"
-              );
+        /*
+          Order terbaru di atas
+        */
 
-            div.className =
-              "order";
+        orders.sort(
+          (a, b) => {
+
+            const timeA =
+              a.createdAt?.seconds || 0;
+
+            const timeB =
+              b.createdAt?.seconds || 0;
+
+            return timeB - timeA;
+
+          }
+        );
 
 
-            div.innerHTML = `
+        renderOrders(
+          orders
+        );
 
+      },
+
+      (error) => {
+
+        console.error(error);
+
+        ordersContainer.innerHTML = `
+
+          <div class="empty">
+
+            Gagal membaca orders.<br><br>
+
+            ${escapeHTML(
+              error.message
+            )}
+
+          </div>
+
+        `;
+
+      }
+
+    );
+
+  }
+
+
+  /* ==========================================
+     RENDER ORDERS
+  ========================================== */
+
+  function renderOrders(
+    orders
+  ) {
+
+    ordersContainer.innerHTML =
+      "";
+
+
+    if (
+      orders.length === 0
+    ) {
+
+      ordersContainer.innerHTML = `
+
+        <div class="empty">
+          Belum ada order.
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    orders.forEach(
+      (order) => {
+
+        const status =
+          order.status ||
+          "Pending";
+
+
+        const statusClass =
+          status
+            .toLowerCase()
+            .replace(
+              " ",
+              "-"
+            );
+
+
+        let date =
+          "Belum tersedia";
+
+
+        if (
+          order.createdAt
+        ) {
+
+          date =
+            new Date(
+              order.createdAt.seconds * 1000
+            ).toLocaleString(
+              "ms-MY"
+            );
+
+        }
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "order " +
+          statusClass;
+
+
+        card.innerHTML = `
+
+          <div class="order-top">
+
+            <div class="product-name">
+              ${escapeHTML(
+                order.productName ||
+                "Unknown Product"
+              )}
+            </div>
+
+            <div class="status">
+              ${escapeHTML(
+                status
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="details">
+
+            <div>
+              🎮 Roblox:
               <strong>
                 ${escapeHTML(
-                  order.productName || "Unknown"
+                  order.robloxUsername ||
+                  "-"
                 )}
               </strong>
+            </div>
 
-              <br>
+            <div>
+              💰 Harga:
+              <strong>
+                RM ${Number(
+                  order.price || 0
+                ).toFixed(2)}
+              </strong>
+            </div>
 
-              Customer:
-              ${escapeHTML(
-                order.customerName || "-"
-              )}
-
-              <br>
-
-              WhatsApp:
-              ${escapeHTML(
-                order.phone || "-"
-              )}
-
-              <br>
-
-              Harga:
-              RM ${Number(
-                order.price || 0
-              ).toFixed(2)}
-
-              <div class="status">
-                Status:
+            <div>
+              🆔 Order ID:
+              <strong>
                 ${escapeHTML(
-                  order.status || "Pending"
+                  order.id
                 )}
-              </div>
+              </strong>
+            </div>
 
-            `;
+            <div>
+              🕐 Masa:
+              <strong>
+                ${escapeHTML(
+                  date
+                )}
+              </strong>
+            </div>
+
+          </div>
 
 
-            if (
-              order.status ===
-              "Pending"
-            ) {
+          <div class="actions">
 
-              const confirmBtn =
-                document.createElement(
-                  "button"
+            <button
+              class="pending-btn"
+              data-id="${escapeAttribute(
+                order.id
+              )}"
+              data-status="Pending"
+            >
+              Pending
+            </button>
+
+
+            <button
+              class="complete"
+              data-id="${escapeAttribute(
+                order.id
+              )}"
+              data-status="Completed"
+            >
+              Completed
+            </button>
+
+
+            <button
+              class="cancel"
+              data-id="${escapeAttribute(
+                order.id
+              )}"
+              data-status="Cancelled"
+            >
+              Cancelled
+            </button>
+
+          </div>
+
+        `;
+
+
+        const buttons =
+          card.querySelectorAll(
+            "button"
+          );
+
+
+        buttons.forEach(
+          (button) => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                updateOrderStatus(
+
+                  button.dataset.id,
+
+                  button.dataset.status
+
                 );
 
-              confirmBtn.textContent =
-                "✅ CONFIRM PAYMENT";
-
-              confirmBtn.className =
-                "confirm";
-
-
-              confirmBtn.onclick =
-                () => {
-
-                  confirmOrder(
-                    orderDoc.id,
-                    order
-                  );
-
-                };
-
-
-              div.appendChild(
-                confirmBtn
-              );
-
-
-              const rejectBtn =
-                document.createElement(
-                  "button"
-                );
-
-              rejectBtn.textContent =
-                "❌ REJECT";
-
-              rejectBtn.className =
-                "reject";
-
-
-              rejectBtn.onclick =
-                () => {
-
-                  rejectOrder(
-                    orderDoc.id
-                  );
-
-                };
-
-
-              div.appendChild(
-                rejectBtn
-              );
-
-            }
-
-
-            ordersContainer.appendChild(
-              div
+              }
             );
 
           }
+        );
+
+
+        ordersContainer.appendChild(
+          card
         );
 
       }
@@ -463,138 +794,38 @@
   }
 
 
-  /* CONFIRM ORDER */
+  /* ==========================================
+     UPDATE STATUS
+  ========================================== */
 
-  async function confirmOrder(
+  async function updateOrderStatus(
     orderId,
-    order
+    newStatus
   ) {
 
     try {
 
-      await runTransaction(
-        db,
-        async (transaction) => {
+      await updateDoc(
 
-          const orderRef =
-            doc(
-              db,
-              "orders",
-              orderId
-            );
+        doc(
+          db,
+          "orders",
+          orderId
+        ),
 
-
-          const productRef =
-            doc(
-              db,
-              "products",
-              order.productId
-            );
-
-
-          const orderSnap =
-            await transaction.get(
-              orderRef
-            );
-
-          const productSnap =
-            await transaction.get(
-              productRef
-            );
-
-
-          if (
-            !orderSnap.exists()
-          ) {
-
-            throw new Error(
-              "Order tak dijumpai."
-            );
-
-          }
-
-
-          if (
-            !productSnap.exists()
-          ) {
-
-            throw new Error(
-              "Product tak dijumpai."
-            );
-
-          }
-
-
-          const currentOrder =
-            orderSnap.data();
-
-
-          if (
-            currentOrder.status !==
-            "Pending"
-          ) {
-
-            throw new Error(
-              "Order ini sudah diproses."
-            );
-
-          }
-
-
-          const product =
-            productSnap.data();
-
-
-          const currentStock =
-            Number(
-              product.stock || 0
-            );
-
-
-          if (
-            currentStock <= 0
-          ) {
-
-            throw new Error(
-              "Stock sudah habis."
-            );
-
-          }
-
-
-          transaction.update(
-            productRef,
-            {
-              stock:
-                currentStock - 1
-            }
-          );
-
-
-          transaction.update(
-            orderRef,
-            {
-              status:
-                "Completed",
-
-              completedAt:
-                new Date()
-            }
-          );
-
+        {
+          status:
+            newStatus
         }
+
       );
-
-
-      alert(
-        "Payment confirmed! Stock telah ditolak 1."
-      );
-
 
     } catch (error) {
 
+      console.error(error);
+
       alert(
-        "Gagal confirm: " +
+        "Gagal update status: " +
         error.message
       );
 
@@ -603,49 +834,59 @@
   }
 
 
-  /* REJECT */
+  /* ==========================================
+     SECURITY HELPERS
+  ========================================== */
 
-  async function rejectOrder(
-    orderId
+  function escapeHTML(
+    value
   ) {
 
-    const orderRef =
-      doc(
-        db,
-        "orders",
-        orderId
+    return String(value)
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
       );
-
-
-    await runTransaction(
-      db,
-      async (transaction) => {
-
-        transaction.update(
-          orderRef,
-          {
-            status:
-              "Rejected"
-          }
-        );
-
-      }
-    );
 
   }
 
 
-  /* SECURITY */
-
-  function escapeHTML(value) {
+  function escapeAttribute(
+    value
+  ) {
 
     return String(value)
 
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
   }
 
