@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ZERAXXSTORE | Admin</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #080808;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #ff2020;
+      margin-bottom: 20px;
+    }
+
+    .box {
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #181818;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #e91515;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff2929;
+    }
+
+    .order {
+      border: 1px solid #292929;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
+
+    .status {
+      color: #ffd000;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .confirm {
+      background: #159447;
+      margin-top: 8px;
+    }
+
+    .reject {
+      background: #555;
+      margin-top: 8px;
+    }
+
+    .logout {
+      background: #333;
+      margin-bottom: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: #ff4040;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>ZERAXXSTORE ADMIN</h1>
+
+  <!-- LOGIN -->
+
+  <div id="loginBox" class="box">
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Admin email"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+    >
+
+    <button id="loginBtn">
+      LOGIN
+    </button>
+
+    <div id="loginError" class="error"></div>
+
+  </div>
+
+
+  <!-- ADMIN PANEL -->
+
+  <div id="adminPanel" class="hidden">
+
+    <button id="logoutBtn" class="logout">
+      LOGOUT
+    </button>
+
+    <div class="box">
+
+      <h2>Orders</h2>
+
+      <div id="orders">
+        Loading orders...
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  import {
+    getFirestore,
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    doc,
+    runTransaction
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+  /* FIREBASE CONFIG */
+
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyADyVbRfEbHlnwsx38Y6VMn51QbOEFfWgM",
+
+    authDomain: "zerraxx-store.firebaseapp.com",
+
+    projectId: "zerraxx-store",
+
+    storageBucket: "zerraxx-store.firebasestorage.app",
+
+    messagingSenderId: "946691118004",
+
+    appId: "1:946691118004:web:cf189cc85f11380c3fd8e1",
+
+    measurementId: "G-006D7F68L4"
+
+  };
+
+
+  const app =
+    initializeApp(firebaseConfig);
+
+  const auth =
+    getAuth(app);
+
+  const db =
+    getFirestore(app);
+
+
+  const loginBox =
+    document.getElementById("loginBox");
+
+  const adminPanel =
+    document.getElementById("adminPanel");
+
+  const ordersContainer =
+    document.getElementById("orders");
+
+
+  /* LOGIN */
+
+  document
+    .getElementById("loginBtn")
+    .addEventListener("click", async () => {
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+
+      try {
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      } catch (error) {
+
+        document
+          .getElementById("loginError")
+          .textContent =
+          error.message;
+
+      }
+
+    });
+
+
+  /* LOGOUT */
+
+  document
+    .getElementById("logoutBtn")
+    .addEventListener("click", () => {
+
+      signOut(auth);
+
+    });
+
+
+  /* AUTH STATE */
+
+  onAuthStateChanged(
+    auth,
+    (user) => {
+
+      if (user) {
+
+        loginBox.classList.add(
+          "hidden"
+        );
+
+        adminPanel.classList.remove(
+          "hidden"
+        );
+
+        loadOrders();
+
+      } else {
+
+        loginBox.classList.remove(
+          "hidden"
+        );
+
+        adminPanel.classList.add(
+          "hidden"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* LOAD ORDERS */
+
+  function loadOrders() {
+
+    const ordersQuery =
+      query(
+        collection(db, "orders"),
+        orderBy("createdAt", "desc")
+      );
+
+
+    onSnapshot(
+      ordersQuery,
+      (snapshot) => {
+
+        ordersContainer.innerHTML = "";
+
+
+        if (snapshot.empty) {
+
+          ordersContainer.innerHTML =
+            "<p>Tiada order.</p>";
+
+          return;
+
+        }
+
+
+        snapshot.forEach(
+          (orderDoc) => {
+
+            const order =
+              orderDoc.data();
+
+
+            const div =
+              document.createElement(
+                "div"
+              );
+
+            div.className =
+              "order";
+
+
+            div.innerHTML = `
+
+              <strong>
+                ${escapeHTML(
+                  order.productName || "Unknown"
+                )}
+              </strong>
+
+              <br>
+
+              Customer:
+              ${escapeHTML(
+                order.customerName || "-"
+              )}
+
+              <br>
+
+              WhatsApp:
+              ${escapeHTML(
+                order.phone || "-"
+              )}
+
+              <br>
+
+              Harga:
+              RM ${Number(
+                order.price || 0
+              ).toFixed(2)}
+
+              <div class="status">
+                Status:
+                ${escapeHTML(
+                  order.status || "Pending"
+                )}
+              </div>
+
+            `;
+
+
+            if (
+              order.status ===
+              "Pending"
+            ) {
+
+              const confirmBtn =
+                document.createElement(
+                  "button"
+                );
+
+              confirmBtn.textContent =
+                "✅ CONFIRM PAYMENT";
+
+              confirmBtn.className =
+                "confirm";
+
+
+              confirmBtn.onclick =
+                () => {
+
+                  confirmOrder(
+                    orderDoc.id,
+                    order
+                  );
+
+                };
+
+
+              div.appendChild(
+                confirmBtn
+              );
+
+
+              const rejectBtn =
+                document.createElement(
+                  "button"
+                );
+
+              rejectBtn.textContent =
+                "❌ REJECT";
+
+              rejectBtn.className =
+                "reject";
+
+
+              rejectBtn.onclick =
+                () => {
+
+                  rejectOrder(
+                    orderDoc.id
+                  );
+
+                };
+
+
+              div.appendChild(
+                rejectBtn
+              );
+
+            }
+
+
+            ordersContainer.appendChild(
+              div
+            );
+
+          }
+        );
+
+      }
+    );
+
+  }
+
+
+  /* CONFIRM ORDER */
+
+  async function confirmOrder(
+    orderId,
+    order
+  ) {
+
+    try {
+
+      await runTransaction(
+        db,
+        async (transaction) => {
+
+          const orderRef =
+            doc(
+              db,
+              "orders",
+              orderId
+            );
+
+
+          const productRef =
+            doc(
+              db,
+              "products",
+              order.productId
+            );
+
+
+          const orderSnap =
+            await transaction.get(
+              orderRef
+            );
+
+          const productSnap =
+            await transaction.get(
+              productRef
+            );
+
+
+          if (
+            !orderSnap.exists()
+          ) {
+
+            throw new Error(
+              "Order tak dijumpai."
+            );
+
+          }
+
+
+          if (
+            !productSnap.exists()
+          ) {
+
+            throw new Error(
+              "Product tak dijumpai."
+            );
+
+          }
+
+
+          const currentOrder =
+            orderSnap.data();
+
+
+          if (
+            currentOrder.status !==
+            "Pending"
+          ) {
+
+            throw new Error(
+              "Order ini sudah diproses."
+            );
+
+          }
+
+
+          const product =
+            productSnap.data();
+
+
+          const currentStock =
+            Number(
+              product.stock || 0
+            );
+
+
+          if (
+            currentStock <= 0
+          ) {
+
+            throw new Error(
+              "Stock sudah habis."
+            );
+
+          }
+
+
+          transaction.update(
+            productRef,
+            {
+              stock:
+                currentStock - 1
+            }
+          );
+
+
+          transaction.update(
+            orderRef,
+            {
+              status:
+                "Completed",
+
+              completedAt:
+                new Date()
+            }
+          );
+
+        }
+      );
+
+
+      alert(
+        "Payment confirmed! Stock telah ditolak 1."
+      );
+
+
+    } catch (error) {
+
+      alert(
+        "Gagal confirm: " +
+        error.message
+      );
+
+    }
+
+  }
+
+
+  /* REJECT */
+
+  async function rejectOrder(
+    orderId
+  ) {
+
+    const orderRef =
+      doc(
+        db,
+        "orders",
+        orderId
+      );
+
+
+    await runTransaction(
+      db,
+      async (transaction) => {
+
+        transaction.update(
+          orderRef,
+          {
+            status:
+              "Rejected"
+          }
+        );
+
+      }
+    );
+
+  }
+
+
+  /* SECURITY */
+
+  function escapeHTML(value) {
+
+    return String(value)
+
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+</script>
+
+</body>
+</html>
