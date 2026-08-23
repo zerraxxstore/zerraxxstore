@@ -257,11 +257,34 @@
     placeholder="Admin Email"
   >
 
+  <div style="position:relative; margin-bottom:12px;">
+
   <input
     type="password"
     id="password"
     placeholder="Password"
+    style="margin-bottom:0; padding-right:45px;"
   >
+
+  <button
+    type="button"
+    id="togglePassword"
+    style="
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      background:none;
+      border:0;
+      color:#aaa;
+      font-size:20px;
+      cursor:pointer;
+    "
+  >
+    👁️
+  </button>
+
+</div>
 
   <button
     class="login-btn"
@@ -1037,6 +1060,33 @@
 
   }
 
+const passwordInput =
+  document.getElementById("password");
+
+const togglePassword =
+  document.getElementById("togglePassword");
+
+togglePassword.addEventListener(
+  "click",
+  () => {
+
+    if (passwordInput.type === "password") {
+
+      passwordInput.type = "text";
+
+      togglePassword.textContent = "🙈";
+
+    } else {
+
+      passwordInput.type = "password";
+
+      togglePassword.textContent = "👁️";
+
+    }
+
+  }
+);
+  
 </script>
 
 </body>
