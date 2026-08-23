@@ -323,7 +323,8 @@
     collection,
     onSnapshot,
     doc,
-    updateDoc
+    updateDoc,
+    getDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -799,39 +800,185 @@
   ========================================== */
 
   async function updateOrderStatus(
-    orderId,
-    newStatus
-  ) {
+  orderId,
+  newStatus
+) {
 
-    try {
+  try {
+
+    const orderRef =
+      doc(
+        db,
+        "orders",
+        orderId
+      );
+
+
+    /* AMBIL ORDER */
+
+    const orderSnap =
+      await getDoc(
+        orderRef
+      );
+
+
+    if (!orderSnap.exists()) {
+
+      alert(
+        "Order tidak dijumpai."
+      );
+
+      return;
+
+    }
+
+
+    const order =
+      orderSnap.data();
+
+
+    /* ==================================
+       COMPLETED
+       Tolak stock 1
+    ================================== */
+
+    if (
+      newStatus === "Completed"
+    ) {
+
+      const productId =
+        order.productId;
+
+
+      if (!productId) {
+
+        alert(
+          "Order ini tiada Product ID."
+        );
+
+        return;
+
+      }
+
+
+      const productRef =
+        doc(
+          db,
+          "products",
+          productId
+        );
+
+
+      const productSnap =
+        await getDoc(
+          productRef
+        );
+
+
+      if (!productSnap.exists()) {
+
+        alert(
+          "Product tidak dijumpai."
+        );
+
+        return;
+
+      }
+
+
+      const product =
+        productSnap.data();
+
+
+      const currentStock =
+        Number(
+          product.stock ??
+          product.quantity ??
+          0
+        );
+
+
+      if (
+        currentStock <= 0
+      ) {
+
+        alert(
+          "Stock product sudah habis."
+        );
+
+        return;
+
+      }
+
+
+      /* TOLAK STOCK 1 */
 
       await updateDoc(
 
-        doc(
-          db,
-          "orders",
-          orderId
-        ),
+        productRef,
 
         {
-          status:
-            newStatus
+          stock:
+            currentStock - 1
         }
 
       );
 
-    } catch (error) {
 
-      console.error(error);
+      /* UPDATE ORDER */
+
+      await updateDoc(
+
+        orderRef,
+
+        {
+          status:
+            "Completed"
+        }
+
+      );
+
 
       alert(
-        "Gagal update status: " +
-        error.message
+        "Order Completed! Stock berkurang 1."
       );
+
+
+      return;
 
     }
 
+
+    /* ==================================
+       CANCELLED / PENDING
+    ================================== */
+
+    await updateDoc(
+
+      orderRef,
+
+      {
+        status:
+          newStatus
+      }
+
+    );
+
+  } catch (error) {
+
+    console.error(
+      "UPDATE ERROR:",
+      error
+    );
+
+    alert(
+      "Gagal update status:\n\n" +
+      error.message
+    );
+
   }
+
+}
 
 
   /* ==========================================
